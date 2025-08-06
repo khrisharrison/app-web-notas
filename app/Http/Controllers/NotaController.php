@@ -7,16 +7,17 @@ use Illuminate\Http\Request;
 
 class NotaController extends Controller
 {
-    public function index(){
-        $notas = Nota::all();
-        return view('notas.index', compact('notas'));
+    public function index()
+    {
+        $notas = Nota::orderBy('updated_at', 'desc')->get();
+        return response()->json($notas);
     }
 
-    // Mostrar formulario creación
-    public function create()
+    // Obtener un registro específico (GET)
+    public function show($id)
     {
-        $notas = Nota::all();
-        return view('notas.create', compact('notas'));
+        $nota = Nota::findOrFail($id);
+        return response()->json($nota);
     }
 
     // Crear nuevo registro (POST)
@@ -32,39 +33,22 @@ class NotaController extends Controller
         return response()->json($notas, 201);
     }
 
-    // Obtener un registro específico (GET)
-    public function show($id)
-    {
-        $nota = Nota::findOrFail($id);
+    // Actualizar un registro (PUT/PATCH)
+    public function update(Request $request, Nota $nota)
+    {   
+        $request->validate([
+            'titulo' => 'required|string',
+            'contenido' => 'nullable|string'
+        ]);
+
+        $nota->update($request->all());
         return response()->json($nota);
     }
 
-    // Mostrar formulario edición
-    public function edit($id)
-    {
-        $notas = Producto::findOrFail($id);
-        return view('notas.edit', compact('notas'));
-    }
-
-    // Actualizar un registro (PUT/PATCH)
-    public function update(Request $request, $id)
-    {
-        $notas = Nota::findOrFail($id);
-        
-        $validated = $request->validate([
-            'titulo' => 'sometimes|string',
-            'contenido' => 'sometimes|string'
-        ]);
-
-        $notas->update($validated);
-        return $notas;
-    }
-
     // Eliminar un registro (DELETE)
-    public function destroy($id)
+    public function destroy(Nota $nota)
     {
-        $notas = Nota::findOrFail($id);
-        $notas->delete();
+        $nota->delete();
         return response()->json(null, 204); // Respuesta vacía con código 204
     }
 }
