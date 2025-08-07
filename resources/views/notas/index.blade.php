@@ -6,8 +6,7 @@
     <title>Mis Notas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/notas.css') }}" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/css/notas.css', 'resources/js/app.js', 'resources/js/notas.js'])
 </head>
 <body class="bg-gray-100 flex h-screen">
     <aside class="w-1/4 bg-white p-6 shadow-lg">
@@ -112,8 +111,6 @@
             </form>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="{{ asset('js/app.js') }}"></script>
-        <script src="{{ asset('js/notas.js') }}"></script>
     </main>
 </body>
 </html>

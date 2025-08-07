@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Cargar notas desde el servidor
 function loadNotes() {
-    axios.get('/notas')
+    axios.get('api/notas')
         .then(response => {
             notes = response.data;
             renderNotes(notes);
@@ -126,7 +126,7 @@ function selectNote(noteId) {
     });*/
     
     // Cargar contenido de la nota
-    axios.get(`/notas/${noteId}`)
+    axios.get(`api/notas/${noteId}`)
         .then(response => {
             const note = response.data;
             
@@ -199,7 +199,7 @@ function createNote(e) {
     saveBtn.disabled = true;
     loader.style.display = 'inline-block';
     
-    axios.post('/notas', { titulo, contenido })
+    axios.post('api/notas', { titulo, contenido })
         .then(response => {
             // Ocultar loader
             saveBtn.disabled = false;
@@ -229,7 +229,7 @@ function showEditForm() {
     if (!currentNoteId) return;
     
     // Cargar datos de la nota actual
-    axios.get(`/notas/${currentNoteId}`)
+    axios.get(`api/notas/${currentNoteId}`)
         .then(response => {
             const note = response.data;
             
@@ -277,7 +277,7 @@ function updateNote(e) {
     updateBtn.disabled = true;
     loader.style.display = 'inline-block';
     
-    axios.put(`/notas/${id}`, { titulo, contenido })
+    axios.put(`api/notas/${id}`, { titulo, contenido })
         .then(response => {
             // Ocultar loader
             updateBtn.disabled = false;
@@ -307,7 +307,7 @@ function deleteCurrentNote() {
     if (!currentNoteId) return;
     
     if (confirm('¿Estás seguro de que quieres eliminar esta nota?')) {
-        axios.delete(`/notas/${currentNoteId}`)
+        axios.delete(`api/notas/${currentNoteId}`)
             .then(response => {
                 // Recargar notas
                 loadNotes();
