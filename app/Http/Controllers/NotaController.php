@@ -10,6 +10,12 @@ class NotaController extends Controller
     public function index()
     {
         $notas = Nota::orderBy('updated_at', 'desc')->get();
+        return view('notas.index', compact('notas'));
+    }
+    
+    public function getAll()
+    {
+        $notas = Nota::orderBy('updated_at', 'desc')->get();
         return response()->json($notas);
     }
 

@@ -3,8 +3,24 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotaController;
 
-Route::get('/', function () {
-    return view('prueba');
+Route::get('/', [NotaController::class, 'index'])->name('notas.index');
+
+// API para operaciones CRUD
+Route::prefix('api')->group(function () {
+    // Obtener todas las notas
+    Route::get('/notas', [NotaController::class, 'getAll']);
+    
+    // Obtener una nota específica
+    Route::get('/notas/{id}', [NotaController::class, 'show']);
+    
+    // Crear nueva nota
+    Route::post('/notas', [NotaController::class, 'store']);
+    
+    // Actualizar nota existente
+    Route::put('/notas/{nota}', [NotaController::class, 'update']);
+    
+    // Eliminar nota
+    Route::delete('/notas/{nota}', [NotaController::class, 'destroy']);
 });
 
 Route::get('/inicio', function (){
@@ -16,7 +32,7 @@ Route::get('/inicio', function (){
 //});
 
 //Route::get('/notas', [NotaController::class, 'index']);
-
+/*
 Route::resource('notas', NotaController::class)->names([
     'index' => 'notas.index',
     'store' => 'notas.store',
@@ -24,18 +40,18 @@ Route::resource('notas', NotaController::class)->names([
     'update' => 'notas.update',
     'destroy' => 'notas.destroy'
 ]);
-/*
+
 // Obtener todas las notas
-Route::get('/notas', [NoteController::class, 'index'])->name('notas.index');
+Route::get('/notas', [NotaController::class, 'getAll'])->name('notas.getAll');
 
 // Obtener una nota específica
-Route::get('/notas/{id}', [NoteController::class, 'show'])->name('notas.show');
+Route::get('/notas/{id}', [NotaController::class, 'show'])->name('notas.show');
 
 // Crear nueva nota
-Route::post('/notas', [NoteController::class, 'store'])->name('notas.store');
+Route::post('/notas', [NotaController::class, 'store'])->name('notas.store');
 
 // Actualizar nota existente
-Route::put('/notas/{nota}', [NoteController::class, 'update'])->name('notas.update');
+Route::put('/notas/{nota}', [NotaController::class, 'update'])->name('notas.update');
 
 // Eliminar nota
-Route::delete('/notas/{nota}', [NoteController::class, 'destroy'])->name('notas.destroy');*/
+Route::delete('/notas/{nota}', [NotaController::class, 'destroy'])->name('notas.destroy');*/

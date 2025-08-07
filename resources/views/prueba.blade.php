@@ -24,20 +24,33 @@
                 <span class="material-icons mr-2">add</span> Nueva Nota
             </button>
             <nav> 
-                <div id="notes-container">
-                    <!-- Las notas se cargarán aquí con JavaScript -->
-                </div>
+                @foreach ($notas as $nota)
+                    <div id="notes-list" data-id="{{ $nota->id }}" onclick="loadNoteContent(this)" class="bg-teal-50 p-4 rounded-lg mb-4 shadow-sm border border-teal-200 cursor-pointer hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-center mb-2">
+                            <h2 class="font-semibold text-teal-700 text-lg">{{ $nota->titulo }}</h2>
+                            <span class="material-icons text-yellow-500">star</span>
+                        </div>
+                        <p class="text-sm text-gray-600 truncate mb-3">{{ $nota->contenido }}</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <div>
+                                <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full mr-1">trabajo</span>
+                                <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full">desarrollo</span>
+                            </div>
+                            <span>{{ $nota->updated_at }}</span>
+                        </div>
+                    </div>
+                @endforeach
             </nav>
         </aside>
         <main id="note-content-container" class="flex-1 p-8 bg-white rounded-l-3xl shadow-xl">
             <!-- Vista para nota vacía -->
             <div id="empty-note-message">
                 <i class="fas fa-sticky-note"></i>
-                <h1 class="text-3xl font-bold text-gray-800">Selecciona una nota existente o crea una nueva</h1>
-                <p class="mb-4 text-lg">El contenido aparecerá aquí...</p>
+                <h3>Selecciona una nota</h3>
+                <p>Selecciona una nota existente o crea una nueva</p>
             </div>
             <!-- Vista para mostrar nota existente -->
-            <div id="note-view" style="display: none;">
+            <div id="note-view">
                 <header class="flex justify-between items-center mb-10">
                     <h1 id="note-title" class="text-3xl font-bold text-gray-800">Selecciona una nota</h1>
                     <div class="flex items-center space-x-4">
@@ -57,7 +70,7 @@
                 </article>
                 <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
                     <div>
-                        <span id="note-updated">Última modificación: 2024-01-15</span>
+                        <span id="note-update">Última modificación: 2024-01-15</span>
                         <span class="mx-2">|</span>
                         <span>211 caracteres</span>
                     </div>
@@ -70,7 +83,6 @@
             <!-- Vista para crear nueva nota (inicialmente oculta) -->
             <div id="note-form" style="display: none;">
                 <h2>Crear Nueva Nota</h2>
-                <div id="create-status" class="status-message"></div>
                 <form id="create-note-form">
                     @csrf
                     <div class="form-group">
@@ -81,9 +93,7 @@
                         <label for="contenido">Contenido:</label>
                         <textarea id="contenido" name="contenido" rows="10" class="form-control" required></textarea>
                     </div>
-                    <button type="submit" class="btn-save" id="save-note-btn">
-                        <span id="save-loader" class="loader" style="display:none;"></span>Guardar Nota
-                    </button>
+                    <button type="submit" class="btn-save">Guardar Nota</button>
                     <button type="button" id="cancel-create" class="btn btn-secondary btn-cancel">Cancelar</button>
                 </form>
             </div>
@@ -121,7 +131,7 @@
                 let notes = [];
                 
                 // DOM Elements
-                const notesContainer = document.getElementById('notes-container');
+                
                 const noteView = document.getElementById('note-view');
                 const noteForm = document.getElementById('note-form');
                 const editForm = document.getElementById('edit-form');
@@ -197,19 +207,11 @@
                         const updatedDate = new Date(note.updated_at).toLocaleDateString();
                         
                         noteElement.innerHTML = `
-                            <div class="bg-teal-50 p-4 rounded-lg mb-4 shadow-sm border border-teal-200 cursor-pointer hover:shadow-md transition-shadow">    
-                                <div class="flex justify-between items-center mb-2">
-                                    <h2 class="font-semibold text-teal-700 text-lg">${note.titulo}</h2>
-                                    <span class="material-icons text-yellow-500">star</span>
-                                </div>
-                                <p class="text-sm text-gray-600 truncate mb-3">${note.contenido }</p>
-                                <div class="flex items-center justify-between text-xs text-gray-500">
-                                    <div>
-                                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full mr-1">trabajo</span>
-                                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full">desarrollo</span>
-                                    </div>
-                                    <span>${note.updated_at }</span>
-                                </div>
+                            <h5>${note.titulo}</h5>
+                            <p>${note.contenido.substring(0, 100)}${note.contenido.length > 100 ? '...' : ''}</p>
+                            <div class="note-date">
+                                <small>Creada: ${createdDate}</small>
+                                ${createdDate !== updatedDate ? `<small> · Editada: ${updatedDate}</small>` : ''}
                             </div>
                         `;
                         
@@ -236,12 +238,12 @@
                     currentNoteId = noteId;
                     
                     // Actualizar selección visual
-                    /*document.querySelectorAll('.note-item').forEach(item => {
+                    document.querySelectorAll('.note-item').forEach(item => {
                         item.classList.remove('active');
                         if (parseInt(item.dataset.id) === noteId) {
                             item.classList.add('active');
                         }
-                    });*/
+                    });
                     
                     // Cargar contenido de la nota
                     axios.get(`/notas/${noteId}`)
@@ -253,10 +255,10 @@
                             document.getElementById('note-content').textContent = note.contenido;
                             
                             // Formatear fechas
-                            //const createdDate = new Date(note.created_at).toLocaleString();
+                            const createdDate = new Date(note.created_at).toLocaleString();
                             const updatedDate = new Date(note.updated_at).toLocaleString();
                             
-                            //document.getElementById('note-date').textContent = `Creada: ${createdDate}`;
+                            document.getElementById('note-date').textContent = `Creada: ${createdDate}`;
                             document.getElementById('note-updated').textContent = `Actualizada: ${updatedDate}`;
                             
                             // Mostrar vista de nota
@@ -274,8 +276,8 @@
                 // Mostrar formulario para crear nueva nota
                 function showCreateForm() {
                     // Resetear formulario
-                    document.getElementById('titulo').value = '';
-                    document.getElementById('contenido').value = '';
+                    document.getElementById('title').value = '';
+                    document.getElementById('content').value = '';
                     document.getElementById('create-status').style.display = 'none';
                     
                     // Mostrar formulario
@@ -308,8 +310,8 @@
                 function createNote(e) {
                     e.preventDefault();
                     
-                    const titulo = document.getElementById('titulo').value;
-                    const contenido = document.getElementById('contenido').value;
+                    const title = document.getElementById('title').value;
+                    const content = document.getElementById('content').value;
                     
                     // Mostrar loader
                     const saveBtn = document.getElementById('save-note-btn');
@@ -317,7 +319,7 @@
                     saveBtn.disabled = true;
                     loader.style.display = 'inline-block';
                     
-                    axios.post('/notas', { titulo, contenido })
+                    axios.post('/notas', { title, content })
                         .then(response => {
                             // Ocultar loader
                             saveBtn.disabled = false;
@@ -353,8 +355,8 @@
                             
                             // Llenar formulario de edición
                             document.getElementById('edit-id').value = note.id;
-                            document.getElementById('edit-title').value = note.titulo;
-                            document.getElementById('edit-content').value = note.contenido;
+                            document.getElementById('edit-title').value = note.title;
+                            document.getElementById('edit-content').value = note.content;
                             document.getElementById('edit-status').style.display = 'none';
                             
                             // Mostrar formulario de edición
@@ -386,8 +388,8 @@
                     e.preventDefault();
                     
                     const id = document.getElementById('edit-id').value;
-                    const titulo = document.getElementById('edit-title').value;
-                    const contenido = document.getElementById('edit-content').value;
+                    const title = document.getElementById('edit-title').value;
+                    const content = document.getElementById('edit-content').value;
                     
                     // Mostrar loader
                     const updateBtn = document.getElementById('update-note-btn');
@@ -395,7 +397,7 @@
                     updateBtn.disabled = true;
                     loader.style.display = 'inline-block';
                     
-                    axios.put(`/notas/${id}`, { titulo, contenido })
+                    axios.put(`/notas/${id}`, { title, content })
                         .then(response => {
                             // Ocultar loader
                             updateBtn.disabled = false;

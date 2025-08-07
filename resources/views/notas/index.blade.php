@@ -1,467 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8"/>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-        <title>Mis Notas</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-        <style>
-            body {
-                font-family: 'Roboto', sans-serif;
-            }
-        </style>
-        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
-    </head>
-    <body class="bg-gray-100 flex h-screen">
-        <aside class="w-1/4 bg-white p-6 shadow-lg">
-            <h1 class="text-3xl font-bold text-gray-800 mb-8">Mis Notas</h1>
-            <div class="relative mb-6">
-                <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
-                <input id="search-notes" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Buscar notas..." type="text"/>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Mis Notas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/notas.css') }}" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex h-screen">
+    <aside class="w-1/4 bg-white p-6 shadow-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Mis Notas</h1>
+        <div class="relative mb-6">
+            <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+            <input id="search-notes" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Buscar notas..." type="text"/>
+        </div>
+        <button id="new-note-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 ease-in-out mb-6">
+            <span class="material-icons mr-2">add</span> Nueva Nota
+        </button>
+        <nav> 
+            <div id="notes-container">
+                <!-- Las notas se cargarán aquí con JavaScript -->
             </div>
-            <button id="new-note-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 ease-in-out mb-6">
-                <span class="material-icons mr-2">add</span> Nueva Nota
-            </button>
-            <nav> 
-                @foreach ($notas as $nota)
-                    <div id="notes-list" data-id="{{ $nota->id }}" onclick="loadNoteContent(this)" class="bg-teal-50 p-4 rounded-lg mb-4 shadow-sm border border-teal-200 cursor-pointer hover:shadow-md transition-shadow">
-                        <div class="flex justify-between items-center mb-2">
-                            <h2 class="font-semibold text-teal-700 text-lg">{{ $nota->titulo }}</h2>
-                            <span class="material-icons text-yellow-500">star</span>
-                        </div>
-                        <p class="text-sm text-gray-600 truncate mb-3">{{ $nota->contenido }}</p>
-                        <div class="flex items-center justify-between text-xs text-gray-500">
-                            <div>
-                                <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full mr-1">trabajo</span>
-                                <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full">desarrollo</span>
-                            </div>
-                            <span>{{ $nota->updated_at }}</span>
-                        </div>
-                    </div>
-                @endforeach
-            </nav>
-        </aside>
-        <main id="note-content-container" class="flex-1 p-8 bg-white rounded-l-3xl shadow-xl">
-            <!-- Vista para nota vacía -->
-            <div id="empty-note-message">
-                <i class="fas fa-sticky-note"></i>
-                <h3>Selecciona una nota</h3>
-                <p>Selecciona una nota existente o crea una nueva</p>
-            </div>
-            <!-- Vista para mostrar nota existente -->
-            <div id="note-view">
-                <header class="flex justify-between items-center mb-10">
-                    <h1 id="note-title" class="text-3xl font-bold text-gray-800">Selecciona una nota</h1>
-                    <div class="flex items-center space-x-4">
-                        <button class="text-gray-500 hover:text-yellow-500 transition-colors">
-                            <span class="material-icons text-2xl">star</span>
-                        </button>
-                        <button id="edit-note-btn" class="text-gray-500 hover:text-orange-500 transition-colors">
-                            <span class="material-icons text-2xl">edit</span>
-                        </button>
-                        <button id="delete-note-btn" class="text-gray-500 hover:text-red-500 transition-colors">
-                            <span class="material-icons text-2xl">delete</span>
-                        </button>
-                    </div>
-                </header>
-                <article class="text-gray-700 leading-relaxed">
-                    <p id="note-content" class="mb-4 text-lg">El contenido aparecerá aquí...</p>
-                </article>
-                <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
-                    <div>
-                        <span id="note-update">Última modificación: 2024-01-15</span>
-                        <span class="mx-2">|</span>
-                        <span>211 caracteres</span>
-                    </div>
-                    <div>
-                        <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium mr-2">trabajo</span>
-                        <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium">desarrollo</span>
-                    </div>
-                </footer>
-            </div>
-            <!-- Vista para crear nueva nota (inicialmente oculta) -->
-            <div id="note-form" style="display: none;">
-                <h2>Crear Nueva Nota</h2>
-                <form id="create-note-form">
-                    @csrf
-                    <div class="form-group">
-                        <label for="titulo">Título:</label>
-                        <input type="text" id="titulo" name="titulo" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contenido">Contenido:</label>
-                        <textarea id="contenido" name="contenido" rows="10" class="form-control" required></textarea>
-                    </div>
-                    <button type="submit" class="btn-save">Guardar Nota</button>
-                    <button type="button" id="cancel-create" class="btn btn-secondary btn-cancel">Cancelar</button>
-                </form>
-            </div>
-            <!-- Vista para editar nota existente -->
-            <div id="edit-form">
-                <div class="form-header">
-                    <h2>Editar Nota</h2>
+        </nav>
+    </aside>
+    <main id="note-content-container" class="flex-1 p-8 bg-white rounded-l-3xl shadow-xl">
+        <!-- Vista para nota vacía -->
+        <div id="empty-note-message">
+            <i class="fas fa-sticky-note"></i>
+            <h1 class="text-3xl font-bold text-gray-800">Selecciona una nota existente o crea una nueva</h1>
+            <p class="mb-4 text-lg">El contenido aparecerá aquí...</p>
+        </div>
+        <!-- Vista para mostrar nota existente -->
+        <div id="note-view" style="display: none;">
+            <header class="flex justify-between items-center mb-10">
+                <h1 id="note-title" class="text-3xl font-bold text-gray-800">Selecciona una nota</h1>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-yellow-500 transition-colors">
+                        <span class="material-icons text-2xl">star</span>
+                    </button>
+                    <button id="edit-note-btn" class="text-gray-500 hover:text-orange-500 transition-colors">
+                        <span class="material-icons text-2xl">edit</span>
+                    </button>
+                    <button id="delete-note-btn" class="text-gray-500 hover:text-red-500 transition-colors">
+                        <span class="material-icons text-2xl">delete</span>
+                    </button>
                 </div>
-                
-                <div id="edit-status" class="status-message"></div>
-                
-                <form id="edit-note-form">
-                    @csrf
-                    <input type="hidden" id="edit-id" name="id">
-                    <div class="mb-3">
-                        <label for="edit-title" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="edit-title" name="titulo" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit-content" class="form-label">Contenido</label>
-                        <textarea class="form-control" id="edit-content" name="contenido" rows="10" required></textarea>
-                    </div>
-                    <div class="action-buttons">
-                        <button type="submit" class="btn btn-success btn-save" id="update-note-btn">
-                            <span id="update-loader" class="loader" style="display:none;"></span>
-                            Actualizar Nota
-                        </button>
-                        <button type="button" id="cancel-edit" class="btn btn-secondary btn-cancel">Cancelar</button>
-                    </div>
-                </form>
+            </header>
+            <article class="text-gray-700 leading-relaxed">
+                <p id="note-content" class="mb-4 text-lg">El contenido aparecerá aquí...</p>
+            </article>
+            <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
+                <div>
+                    <span id="note-updated">Última modificación: 2024-01-15</span>
+                    <span class="mx-2">|</span>
+                    <span>211 caracteres</span>
+                </div>
+                <div>
+                    <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium mr-2">trabajo</span>
+                    <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium">desarrollo</span>
+                </div>
+            </footer>
+        </div>
+        <!-- Vista para crear nueva nota (inicialmente oculta) -->
+        <div id="note-form" style="display: none;">
+            <h2>Crear Nueva Nota</h2>
+            <div id="create-status" class="status-message"></div>
+            <form id="create-note-form">
+                @csrf
+                <div class="form-group">
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" name="titulo" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="contenido">Contenido:</label>
+                    <textarea id="contenido" name="contenido" rows="10" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn-save" id="save-note-btn">
+                    <span id="save-loader" class="loader" style="display:none;"></span>Guardar Nota
+                </button>
+                <button type="button" id="cancel-create" class="btn btn-secondary btn-cancel">Cancelar</button>
+            </form>
+        </div>
+        <!-- Vista para editar nota existente -->
+        <div id="edit-form">
+            <div class="form-header">
+                <h2>Editar Nota</h2>
             </div>
-            <script>
-                // Variables globales
-                let currentNoteId = null;
-                let notes = [];
-                
-                // DOM Elements
-                
-                const noteView = document.getElementById('note-view');
-                const noteForm = document.getElementById('note-form');
-                const editForm = document.getElementById('edit-form');
-                const emptyNoteMessage = document.getElementById('empty-note-message');
-                const searchInput = document.getElementById('search-notes');
-                
-                // Botones
-                const newNoteBtn = document.getElementById('new-note-btn');
-                const editNoteBtn = document.getElementById('edit-note-btn');
-                const deleteNoteBtn = document.getElementById('delete-note-btn');
-                const cancelCreateBtn = document.getElementById('cancel-create');
-                const cancelEditBtn = document.getElementById('cancel-edit');
-                
-                // Formularios
-                const createNoteForm = document.getElementById('create-note-form');
-                const editNoteForm = document.getElementById('edit-note-form');
-                
-                // Inicialización
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Cargar notas al inicio
-                    loadNotes();
-                    
-                    // Event listeners
-                    newNoteBtn.addEventListener('click', showCreateForm);
-                    editNoteBtn.addEventListener('click', showEditForm);
-                    deleteNoteBtn.addEventListener('click', deleteCurrentNote);
-                    cancelCreateBtn.addEventListener('click', cancelCreate);
-                    cancelEditBtn.addEventListener('click', cancelEdit);
-                    
-                    createNoteForm.addEventListener('submit', createNote);
-                    editNoteForm.addEventListener('submit', updateNote);
-                    
-                    searchInput.addEventListener('input', filterNotes);
-                });
-                
-                // Cargar notas desde el servidor
-                function loadNotes() {
-                    axios.get('/notas')
-                        .then(response => {
-                            notes = response.data;
-                            renderNotes(notes);
-                            
-                            // Si hay notas, seleccionar la primera
-                            if (notes.length > 0) {
-                                selectNote(notes[0].id);
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error cargando notas:", error);
-                            showStatus('create-status', 'Error al cargar las notas', 'error');
-                        });
-                }
-                
-                // Renderizar notas en el aside
-                function renderNotes(notesToRender) {
-                    notesContainer.innerHTML = '';
-                    
-                    if (notesToRender.length === 0) {
-                        notesContainer.innerHTML = '<div class="text-center py-4 text-muted">No se encontraron notas</div>';
-                        return;
-                    }
-                    
-                    notesToRender.forEach(note => {
-                        const noteElement = document.createElement('div');
-                        noteElement.className = 'note-item';
-                        if (currentNoteId === note.id) {
-                            noteElement.classList.add('active');
-                        }
-                        noteElement.dataset.id = note.id;
-                        
-                        // Formatear fechas
-                        const createdDate = new Date(note.created_at).toLocaleDateString();
-                        const updatedDate = new Date(note.updated_at).toLocaleDateString();
-                        
-                        noteElement.innerHTML = `
-                            <h5>${note.titulo}</h5>
-                            <p>${note.contenido.substring(0, 100)}${note.contenido.length > 100 ? '...' : ''}</p>
-                            <div class="note-date">
-                                <small>Creada: ${createdDate}</small>
-                                ${createdDate !== updatedDate ? `<small> · Editada: ${updatedDate}</small>` : ''}
-                            </div>
-                        `;
-                        
-                        noteElement.addEventListener('click', function() {
-                            selectNote(note.id);
-                        });
-                        
-                        notesContainer.appendChild(noteElement);
-                    });
-                }
-                
-                // Filtrar notas según búsqueda
-                function filterNotes() {
-                    const searchTerm = searchInput.value.toLowerCase();
-                    const filteredNotes = notes.filter(note => 
-                        note.titulo.toLowerCase().includes(searchTerm) || 
-                        note.contenido.toLowerCase().includes(searchTerm)
-                    );
-                    renderNotes(filteredNotes);
-                }
-                
-                // Seleccionar una nota para ver
-                function selectNote(noteId) {
-                    currentNoteId = noteId;
-                    
-                    // Actualizar selección visual
-                    document.querySelectorAll('.note-item').forEach(item => {
-                        item.classList.remove('active');
-                        if (parseInt(item.dataset.id) === noteId) {
-                            item.classList.add('active');
-                        }
-                    });
-                    
-                    // Cargar contenido de la nota
-                    axios.get(`/notas/${noteId}`)
-                        .then(response => {
-                            const note = response.data;
-                            
-                            // Actualizar vista de nota
-                            document.getElementById('note-title').textContent = note.titulo;
-                            document.getElementById('note-content').textContent = note.contenido;
-                            
-                            // Formatear fechas
-                            const createdDate = new Date(note.created_at).toLocaleString();
-                            const updatedDate = new Date(note.updated_at).toLocaleString();
-                            
-                            document.getElementById('note-date').textContent = `Creada: ${createdDate}`;
-                            document.getElementById('note-updated').textContent = `Actualizada: ${updatedDate}`;
-                            
-                            // Mostrar vista de nota
-                            noteView.style.display = 'block';
-                            noteForm.style.display = 'none';
-                            editForm.style.display = 'none';
-                            emptyNoteMessage.style.display = 'none';
-                        })
-                        .catch(error => {
-                            console.error("Error cargando nota:", error);
-                            showStatus('create-status', 'Error al cargar la nota', 'error');
-                        });
-                }
-                
-                // Mostrar formulario para crear nueva nota
-                function showCreateForm() {
-                    // Resetear formulario
-                    document.getElementById('title').value = '';
-                    document.getElementById('content').value = '';
-                    document.getElementById('create-status').style.display = 'none';
-                    
-                    // Mostrar formulario
-                    noteForm.style.display = 'block';
-                    noteView.style.display = 'none';
-                    editForm.style.display = 'none';
-                    emptyNoteMessage.style.display = 'none';
-                    
-                    // Deseleccionar cualquier nota
-                    currentNoteId = null;
-                    document.querySelectorAll('.note-item').forEach(item => {
-                        item.classList.remove('active');
-                    });
-                }
-                
-                // Cancelar creación de nota
-                function cancelCreate() {
-                    // Si hay notas, mostrar la primera, sino mostrar mensaje vacío
-                    if (notes.length > 0) {
-                        selectNote(notes[0].id);
-                    } else {
-                        noteView.style.display = 'none';
-                        noteForm.style.display = 'none';
-                        editForm.style.display = 'none';
-                        emptyNoteMessage.style.display = 'block';
-                    }
-                }
-                
-                // Crear nueva nota
-                function createNote(e) {
-                    e.preventDefault();
-                    
-                    const title = document.getElementById('title').value;
-                    const content = document.getElementById('content').value;
-                    
-                    // Mostrar loader
-                    const saveBtn = document.getElementById('save-note-btn');
-                    const loader = document.getElementById('save-loader');
-                    saveBtn.disabled = true;
-                    loader.style.display = 'inline-block';
-                    
-                    axios.post('/notas', { title, content })
-                        .then(response => {
-                            // Ocultar loader
-                            saveBtn.disabled = false;
-                            loader.style.display = 'none';
-                            
-                            // Mostrar mensaje de éxito
-                            showStatus('create-status', 'Nota creada con éxito!', 'success');
-                            
-                            // Recargar notas después de un breve retraso
-                            setTimeout(() => {
-                                loadNotes();
-                                selectNote(response.data.id);
-                            }, 1500);
-                        })
-                        .catch(error => {
-                            // Ocultar loader
-                            saveBtn.disabled = false;
-                            loader.style.display = 'none';
-                            
-                            console.error("Error creando nota:", error);
-                            showStatus('create-status', 'Error al crear la nota', 'error');
-                        });
-                }
-                
-                // Mostrar formulario para editar nota
-                function showEditForm() {
-                    if (!currentNoteId) return;
-                    
-                    // Cargar datos de la nota actual
-                    axios.get(`/notas/${currentNoteId}`)
-                        .then(response => {
-                            const note = response.data;
-                            
-                            // Llenar formulario de edición
-                            document.getElementById('edit-id').value = note.id;
-                            document.getElementById('edit-title').value = note.title;
-                            document.getElementById('edit-content').value = note.content;
-                            document.getElementById('edit-status').style.display = 'none';
-                            
-                            // Mostrar formulario de edición
-                            noteView.style.display = 'none';
-                            noteForm.style.display = 'none';
-                            editForm.style.display = 'block';
-                            emptyNoteMessage.style.display = 'none';
-                        })
-                        .catch(error => {
-                            console.error("Error cargando nota para editar:", error);
-                            showStatus('edit-status', 'Error al cargar la nota para editar', 'error');
-                        });
-                }
-                
-                // Cancelar edición de nota
-                function cancelEdit() {
-                    if (currentNoteId) {
-                        selectNote(currentNoteId);
-                    } else {
-                        noteView.style.display = 'none';
-                        noteForm.style.display = 'none';
-                        editForm.style.display = 'none';
-                        emptyNoteMessage.style.display = 'block';
-                    }
-                }
-                
-                // Actualizar nota existente
-                function updateNote(e) {
-                    e.preventDefault();
-                    
-                    const id = document.getElementById('edit-id').value;
-                    const title = document.getElementById('edit-title').value;
-                    const content = document.getElementById('edit-content').value;
-                    
-                    // Mostrar loader
-                    const updateBtn = document.getElementById('update-note-btn');
-                    const loader = document.getElementById('update-loader');
-                    updateBtn.disabled = true;
-                    loader.style.display = 'inline-block';
-                    
-                    axios.put(`/notas/${id}`, { title, content })
-                        .then(response => {
-                            // Ocultar loader
-                            updateBtn.disabled = false;
-                            loader.style.display = 'none';
-                            
-                            // Mostrar mensaje de éxito
-                            showStatus('edit-status', 'Nota actualizada con éxito!', 'success');
-                            
-                            // Recargar notas después de un breve retraso
-                            setTimeout(() => {
-                                loadNotes();
-                                selectNote(id);
-                            }, 1500);
-                        })
-                        .catch(error => {
-                            // Ocultar loader
-                            updateBtn.disabled = false;
-                            loader.style.display = 'none';
-                            
-                            console.error("Error actualizando nota:", error);
-                            showStatus('edit-status', 'Error al actualizar la nota', 'error');
-                        });
-                }
-                
-                // Eliminar nota actual
-                function deleteCurrentNote() {
-                    if (!currentNoteId) return;
-                    
-                    if (confirm('¿Estás seguro de que quieres eliminar esta nota?')) {
-                        axios.delete(`/notas/${currentNoteId}`)
-                            .then(response => {
-                                // Recargar notas
-                                loadNotes();
-                                
-                                // Si hay notas, mostrar la primera, sino mostrar mensaje vacío
-                                if (notes.length > 0) {
-                                    selectNote(notes[0].id);
-                                } else {
-                                    noteView.style.display = 'none';
-                                    noteForm.style.display = 'none';
-                                    editForm.style.display = 'none';
-                                    emptyNoteMessage.style.display = 'block';
-                                }
-                            })
-                            .catch(error => {
-                                console.error("Error eliminando nota:", error);
-                                showStatus('create-status', 'Error al eliminar la nota', 'error');
-                            });
-                    }
-                }
-                
-                // Mostrar mensajes de estado
-                function showStatus(elementId, message, type) {
-                    const statusElement = document.getElementById(elementId);
-                    statusElement.textContent = message;
-                    statusElement.className = `status-message status-${type}`;
-                    statusElement.style.display = 'block';
-                    
-                    // Ocultar después de 5 segundos
-                    setTimeout(() => {
-                        statusElement.style.display = 'none';
-                    }, 5000);
-                }
-            </script>
-        </main>
-    </body>
+            
+            <div id="edit-status" class="status-message"></div>
+            
+            <form id="edit-note-form">
+                @csrf
+                <input type="hidden" id="edit-id" name="id">
+                <div class="mb-3">
+                    <label for="edit-title" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="edit-title" name="titulo" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-content" class="form-label">Contenido</label>
+                    <textarea class="form-control" id="edit-content" name="contenido" rows="10" required></textarea>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-success btn-save" id="update-note-btn">
+                        <span id="update-loader" class="loader" style="display:none;"></span>
+                        Actualizar Nota
+                    </button>
+                    <button type="button" id="cancel-edit" class="btn btn-secondary btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/notas.js') }}"></script>
+    </main>
+</body>
 </html>
