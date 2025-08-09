@@ -134,10 +134,10 @@ function selectNote(noteId) {
             document.getElementById('note-content').textContent = note.contenido;
             
             // Formatear fechas
-            //const createdDate = new Date(note.created_at).toLocaleString();
+            const createdDate = new Date(note.created_at).toLocaleString();
             const updatedDate = new Date(note.updated_at).toLocaleString();
             
-            //document.getElementById('note-date').textContent = `Creada: ${createdDate}`;
+            document.getElementById('note-created').textContent = `Creada: ${createdDate}`;
             document.getElementById('note-updated').textContent = `Actualizada: ${updatedDate}`;
             
             // Mostrar vista de nota

@@ -26,32 +26,3 @@ Route::prefix('api')->group(function () {
 Route::get('/inicio', function (){
     return view('inicio');
 });
-
-//Route::get('/prueba', function (){
-//    return view('prueba');
-//});
-
-//Route::get('/notas', [NotaController::class, 'index']);
-/*
-Route::resource('notas', NotaController::class)->names([
-    'index' => 'notas.index',
-    'store' => 'notas.store',
-    'show' => 'notas.show',
-    'update' => 'notas.update',
-    'destroy' => 'notas.destroy'
-]);
-
-// Obtener todas las notas
-Route::get('/notas', [NotaController::class, 'getAll'])->name('notas.getAll');
-
-// Obtener una nota específica
-Route::get('/notas/{id}', [NotaController::class, 'show'])->name('notas.show');
-
-// Crear nueva nota
-Route::post('/notas', [NotaController::class, 'store'])->name('notas.store');
-
-// Actualizar nota existente
-Route::put('/notas/{nota}', [NotaController::class, 'update'])->name('notas.update');
-
-// Eliminar nota
-Route::delete('/notas/{nota}', [NotaController::class, 'destroy'])->name('notas.destroy');*/

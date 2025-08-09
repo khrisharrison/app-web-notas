@@ -28,8 +28,7 @@
         <!-- Vista para nota vacía -->
         <div id="empty-note-message">
             <i class="fas fa-sticky-note"></i>
-            <h1 class="text-3xl font-bold text-gray-800">Selecciona una nota existente o crea una nueva</h1>
-            <p class="mb-4 text-lg">El contenido aparecerá aquí...</p>
+            <h1 class="text-3xl mb-4">Crea tu primera nota :)</h1>
         </div>
         <!-- Vista para mostrar nota existente -->
         <div id="note-view" style="display: none;">
@@ -52,7 +51,9 @@
             </article>
             <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
                 <div>
-                    <span id="note-updated">Última modificación: 2025-06-18</span>
+                    <span id="note-created">Creada: 2025-06-18</span>
+                    <span class="mx-2">|</span>
+                    <span id="note-updated">Actualizada: 2025-08-02</span>
                     <span class="mx-2">|</span>
                     <span>24 caracteres</span>
                 </div>
