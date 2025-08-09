@@ -75,22 +75,21 @@ function renderNotes(notesToRender) {
         noteElement.dataset.id = note.id;
         
         // Formatear fechas
-        const createdDate = new Date(note.created_at).toLocaleDateString();
         const updatedDate = new Date(note.updated_at).toLocaleDateString();
         
         noteElement.innerHTML = `
-            <div class="bg-teal-50 p-4 rounded-lg mb-4 shadow-sm border border-teal-200 cursor-pointer hover:shadow-md transition-shadow">    
+            <div class="bg-teal-50 p-4 rounded-lg mb-4 shadow-sm border border-teal-200 cursor-pointer transition-shadow">    
                 <div class="flex justify-between items-center mb-2">
                     <h2 class="font-semibold text-teal-700 text-lg">${note.titulo}</h2>
-                    <span class="material-icons text-yellow-500">star</span>
+                    <span class="material-icons text-gray-100 hover:text-yellow-500">star</span>
                 </div>
                 <p class="text-sm text-gray-600 truncate mb-3">${note.contenido }</p>
                 <div class="flex items-center justify-between text-xs text-gray-500">
                     <div>
-                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full mr-1">trabajo</span>
-                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full">desarrollo</span>
+                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full mr-1">categoria1</span>
+                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full">categoria2</span>
                     </div>
-                    <span>${note.updated_at }</span>
+                    <span>${ updatedDate }</span>
                 </div>
             </div>
         `;
@@ -118,12 +117,12 @@ function selectNote(noteId) {
     currentNoteId = noteId;
     
     // Actualizar selección visual
-    /*document.querySelectorAll('.note-item').forEach(item => {
+    document.querySelectorAll('.note-item').forEach(item => {
         item.classList.remove('active');
         if (parseInt(item.dataset.id) === noteId) {
             item.classList.add('active');
         }
-    });*/
+    });
     
     // Cargar contenido de la nota
     axios.get(`api/notas/${noteId}`)

@@ -9,10 +9,10 @@
     @vite(['resources/css/app.css', 'resources/css/notas.css', 'resources/js/app.js', 'resources/js/notas.js'])
 </head>
 <body class="bg-gray-100 flex h-screen">
-    <aside class="w-1/4 bg-white p-6 shadow-lg">
+    <aside id="notes-list" class="w-1/4 bg-white p-6 shadow-lg">
         <h1 class="text-3xl font-bold text-gray-800 mb-8">Mis Notas</h1>
         <div class="relative mb-6">
-            <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+            <span class="material-icons absolute left-3 top-9 transform -translate-y-1/2 text-gray-400">search</span>
             <input id="search-notes" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Buscar notas..." type="text"/>
         </div>
         <button id="new-note-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 ease-in-out mb-6">
@@ -24,7 +24,7 @@
             </div>
         </nav>
     </aside>
-    <main id="note-content-container" class="flex-1 p-8 bg-white rounded-l-3xl shadow-xl">
+    <main id="note-content-container" class="flex-1 p-8 bg-white shadow-xl">
         <!-- Vista para nota vacía -->
         <div id="empty-note-message">
             <i class="fas fa-sticky-note"></i>
@@ -39,7 +39,7 @@
                     <button class="text-gray-500 hover:text-yellow-500 transition-colors">
                         <span class="material-icons text-2xl">star</span>
                     </button>
-                    <button id="edit-note-btn" class="text-gray-500 hover:text-orange-500 transition-colors">
+                    <button id="edit-note-btn" class="text-gray-500 hover:text-orange-400 transition-colors">
                         <span class="material-icons text-2xl">edit</span>
                     </button>
                     <button id="delete-note-btn" class="text-gray-500 hover:text-red-500 transition-colors">
@@ -52,29 +52,31 @@
             </article>
             <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
                 <div>
-                    <span id="note-updated">Última modificación: 2024-01-15</span>
+                    <span id="note-updated">Última modificación: 2025-06-18</span>
                     <span class="mx-2">|</span>
-                    <span>211 caracteres</span>
+                    <span>24 caracteres</span>
                 </div>
                 <div>
-                    <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium mr-2">trabajo</span>
-                    <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium">desarrollo</span>
+                    <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium mr-2">categoria1</span>
+                    <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium">categoria2</span>
                 </div>
             </footer>
         </div>
         <!-- Vista para crear nueva nota (inicialmente oculta) -->
-        <div id="note-form" style="display: none;">
-            <h2>Crear Nueva Nota</h2>
+        <div id="note-form">
+            <div class="form-header">
+                <h2 class="text-2xl font-bold text-gray-600 mb-3">Crear Nueva Nota</h2>
+            </div>
             <div id="create-status" class="status-message"></div>
             <form id="create-note-form">
                 @csrf
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="titulo">Título:</label>
                     <input type="text" id="titulo" name="titulo" class="form-control" required>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="contenido">Contenido:</label>
-                    <textarea id="contenido" name="contenido" rows="10" class="form-control" required></textarea>
+                    <textarea id="contenido" name="contenido" rows="10" class="form-control-textarea" required></textarea>
                 </div>
                 <button type="submit" class="btn-save" id="save-note-btn">
                     <span id="save-loader" class="loader" style="display:none;"></span>Guardar Nota
@@ -85,7 +87,7 @@
         <!-- Vista para editar nota existente -->
         <div id="edit-form">
             <div class="form-header">
-                <h2>Editar Nota</h2>
+                <h2 class="text-2xl font-bold text-gray-600 mb-3">Editar Nota</h2>
             </div>
             
             <div id="edit-status" class="status-message"></div>
@@ -94,12 +96,12 @@
                 @csrf
                 <input type="hidden" id="edit-id" name="id">
                 <div class="mb-3">
-                    <label for="edit-title" class="form-label">Título</label>
+                    <label for="edit-title" class="form-label">Título:</label>
                     <input type="text" class="form-control" id="edit-title" name="titulo" required>
                 </div>
                 <div class="mb-3">
-                    <label for="edit-content" class="form-label">Contenido</label>
-                    <textarea class="form-control" id="edit-content" name="contenido" rows="10" required></textarea>
+                    <label for="edit-content" class="form-label">Contenido:</label>
+                    <textarea class="form-control-textarea" id="edit-content" name="contenido" rows="10" required></textarea>
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-success btn-save" id="update-note-btn">
