@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Nota extends Model
 {
-    protected $fillable = ['titulo', 'contenido'];
+    protected $fillable = ['user_id', 'titulo', 'contenido'];
+    
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

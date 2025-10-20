@@ -39,9 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', filterNotes);
 });
 
+    const ROUTE = 'notas/api';
+
 // Cargar notas desde el servidor
 function loadNotes() {
-    axios.get('api/notas')
+    axios.get(`${ROUTE}/all`)
         .then(response => {
             notes = response.data;
             renderNotes(notes);
@@ -125,7 +127,7 @@ function selectNote(noteId) {
     });
     
     // Cargar contenido de la nota
-    axios.get(`api/notas/${noteId}`)
+    axios.get(`${ROUTE}/${noteId}`)
         .then(response => {
             const note = response.data;
             
@@ -198,7 +200,7 @@ function createNote(e) {
     saveBtn.disabled = true;
     loader.style.display = 'inline-block';
     
-    axios.post('api/notas', { titulo, contenido })
+    axios.post(`${ROUTE}`, { titulo, contenido })
         .then(response => {
             // Ocultar loader
             saveBtn.disabled = false;
@@ -228,7 +230,7 @@ function showEditForm() {
     if (!currentNoteId) return;
     
     // Cargar datos de la nota actual
-    axios.get(`api/notas/${currentNoteId}`)
+    axios.get(`${ROUTE}/${currentNoteId}`)
         .then(response => {
             const note = response.data;
             
@@ -276,7 +278,7 @@ function updateNote(e) {
     updateBtn.disabled = true;
     loader.style.display = 'inline-block';
     
-    axios.put(`api/notas/${id}`, { titulo, contenido })
+    axios.put(`${ROUTE}/${id}`, { titulo, contenido })
         .then(response => {
             // Ocultar loader
             updateBtn.disabled = false;
@@ -306,7 +308,7 @@ function deleteCurrentNote() {
     if (!currentNoteId) return;
     
     if (confirm('¿Estás seguro de que quieres eliminar esta nota?')) {
-        axios.delete(`api/notas/${currentNoteId}`)
+        axios.delete(`${ROUTE}/${currentNoteId}`)
             .then(response => {
                 // Recargar notas
                 loadNotes();
