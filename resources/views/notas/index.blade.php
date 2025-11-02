@@ -4,21 +4,20 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Mis Notas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     @vite(['resources/css/app.css', 'resources/css/notas.css', 'resources/js/app.js', 'resources/js/notas.js'])
 </head>
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
+<body class="bg-gray-100 flex flex-col min-h-screen dark:bg-slate-900">
     @include('layouts.navigation')
     <div class="flex flex-1 h-full">
-        <aside id="notes-list" class="w-1/4 bg-white p-6 shadow-lg">
-            <h1 class="text-3xl font-bold text-gray-800 mb-8">Mis Notas</h1>
+        <aside id="notes-list" class="w-1/4 bg-white p-6 shadow-lg dark:bg-slate-800">
+            <h1 class="text-3xl font-bold text-gray-800 mb-8 dark:text-slate-100">Mis Notas</h1>
             <div class="relative mb-6">
-                <span class="material-icons absolute left-3 top-9 transform -translate-y-1/2 text-gray-400">search</span>
-                <input id="search-notes" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Buscar notas..." type="text"/>
+                <span class="material-icons absolute left-3 top-6 transform -translate-y-1/2 text-gray-400">search</span>
+                <input id="search-notes" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400" placeholder="Buscar notas..." type="text"/>
             </div>
-            <button id="new-note-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 ease-in-out mb-6">
+            <button id="new-note-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 ease-in-out mb-6 dark:shadow-sm">
                 <span class="material-icons mr-2">add</span> Nueva Nota
             </button>
             <nav> 
@@ -27,7 +26,7 @@
                 </div>
             </nav>
         </aside>
-        <main id="note-content-container" class="flex-1 p-8 bg-white shadow-xl">
+    <main id="note-content-container" class="flex-1 p-8 bg-white shadow-xl dark:bg-slate-900 dark:shadow-none">
             <!-- Vista para nota vacía -->
             <div id="empty-note-message">
                 <i class="fas fa-sticky-note"></i>
@@ -36,15 +35,15 @@
             <!-- Vista para mostrar nota existente -->
             <div id="note-view" style="display: none;">
                 <header class="flex justify-between items-center mb-10">
-                    <h1 id="note-title" class="text-3xl font-bold text-gray-800">Selecciona una nota</h1>
+                    <h1 id="note-title" class="text-3xl font-bold text-gray-800 dark:text-slate-100">Selecciona una nota</h1>
                     <div class="flex items-center space-x-4">
-                        <button class="text-gray-500 hover:text-yellow-500 transition-colors">
+                        <button class="text-gray-500 hover:text-yellow-500 transition-colors dark:text-slate-300 dark:hover:text-yellow-400">
                             <span class="material-icons text-2xl">star</span>
                         </button>
-                        <button id="edit-note-btn" class="text-gray-500 hover:text-orange-400 transition-colors">
+                        <button id="edit-note-btn" class="text-gray-500 hover:text-orange-400 transition-colors dark:text-slate-300 dark:hover:text-orange-300">
                             <span class="material-icons text-2xl">edit</span>
                         </button>
-                        <button id="delete-note-btn" class="text-gray-500 hover:text-red-500 transition-colors">
+                        <button id="delete-note-btn" class="text-gray-500 hover:text-red-500 transition-colors dark:text-slate-300 dark:hover:text-red-400">
                             <span class="material-icons text-2xl">delete</span>
                         </button>
                     </div>
@@ -52,7 +51,7 @@
                 <article class="text-gray-700 leading-relaxed">
                     <p id="note-content" class="mb-4 text-lg">El contenido aparecerá aquí...</p>
                 </article>
-                <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
+                <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500 dark:border-gray-700 dark:text-slate-400">
                     <div>
                         <span id="note-created">Creada: 2025-06-18</span>
                         <span class="mx-2">|</span>

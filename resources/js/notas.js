@@ -37,6 +37,40 @@ document.addEventListener('DOMContentLoaded', function() {
     editNoteForm.addEventListener('submit', updateNote);
     
     searchInput.addEventListener('input', filterNotes);
+    // Dark mode: Inicializar toggle si existe
+    const darkToggle = document.getElementById('dark-mode-toggle');
+    const darkIcon = document.getElementById('dark-mode-icon');
+    if (darkToggle && darkIcon) {
+        const applyDark = () => {
+            const enabled = localStorage.getItem('dark-mode') === 'true';
+            if (enabled) {
+                document.documentElement.classList.add('dark');
+                darkToggle.setAttribute('aria-pressed', 'true');
+                // cambiar icono a sol (para indicar 'salir modo oscuro')
+                darkIcon.textContent = 'light_mode';
+            } else {
+                document.documentElement.classList.remove('dark');
+                darkToggle.setAttribute('aria-pressed', 'false');
+                // mostrar icono de luna
+                darkIcon.textContent = 'dark_mode';
+            }
+        };
+
+        // Toggle on click
+        darkToggle.addEventListener('click', () => {
+            const currently = localStorage.getItem('dark-mode') === 'true';
+            localStorage.setItem('dark-mode', (!currently).toString());
+            applyDark();
+        });
+
+        // Apply initial state: if not set, respect system preference
+        if (localStorage.getItem('dark-mode') === null) {
+            const prefers = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            localStorage.setItem('dark-mode', prefers ? 'true' : 'false');
+        }
+
+        applyDark();
+    }
 });
 
     const ROUTE = 'notas/api';
@@ -80,16 +114,16 @@ function renderNotes(notesToRender) {
         const updatedDate = new Date(note.updated_at).toLocaleDateString();
         
         noteElement.innerHTML = `
-            <div class="bg-teal-50 p-4 rounded-lg mb-4 shadow-sm border border-teal-200 cursor-pointer transition-shadow">    
+            <div class="bg-teal-50 p-4 rounded-lg mb-4 shadow-sm border border-teal-200 cursor-pointer transition-shadow dark:bg-gradient-to-r dark:from-slate-800 dark:to-slate-800/60 dark:border-teal-700">    
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="font-semibold text-teal-700 text-lg">${note.titulo}</h2>
-                    <span class="material-icons text-gray-100 hover:text-yellow-500">star</span>
+                    <h2 class="font-semibold text-teal-700 text-lg dark:text-teal-200">${note.titulo}</h2>
+                    <span class="material-icons text-gray-600 hover:text-yellow-500 dark:text-slate-300">star</span>
                 </div>
-                <p class="text-sm text-gray-600 truncate mb-3">${note.contenido }</p>
-                <div class="flex items-center justify-between text-xs text-gray-500">
+                <p class="text-sm text-gray-600 truncate mb-3 dark:text-slate-300">${note.contenido }</p>
+                <div class="flex items-center justify-between text-xs text-gray-500 dark:text-slate-400">
                     <div>
-                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full mr-1">categoria1</span>
-                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full">categoria2</span>
+                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full mr-1 dark:bg-teal-900/20 dark:text-teal-200">categoria1</span>
+                        <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full dark:bg-teal-900/20 dark:text-teal-200">categoria2</span>
                     </div>
                     <span>${ updatedDate }</span>
                 </div>
