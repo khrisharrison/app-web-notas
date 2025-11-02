@@ -30,7 +30,7 @@
             <!-- Vista para nota vacía -->
             <div id="empty-note-message">
                 <i class="fas fa-sticky-note"></i>
-                <h1 class="text-3xl mb-4">Crea tu primera nota :)</h1>
+                <h1 class="text-3xl mb-4 dark:text-slate-100">Crea tu primera nota :)</h1>
             </div>
             <!-- Vista para mostrar nota existente -->
             <div id="note-view" style="display: none;">
@@ -48,7 +48,7 @@
                         </button>
                     </div>
                 </header>
-                <article class="text-gray-700 leading-relaxed">
+                <article class="text-gray-700 leading-relaxed dark:text-slate-300">
                     <p id="note-content" class="mb-4 text-lg">El contenido aparecerá aquí...</p>
                 </article>
                 <footer class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500 dark:border-gray-700 dark:text-slate-400">
@@ -68,7 +68,7 @@
             <!-- Vista para crear nueva nota (inicialmente oculta) -->
             <div id="note-form">
                 <div class="form-header">
-                    <h2 class="text-2xl font-bold text-gray-600 mb-3">Crear Nueva Nota</h2>
+                    <h2 class="text-2xl font-bold text-gray-600 mb-3 dark:text-slate-300">Crear Nueva Nota</h2>
                 </div>
                 <div id="create-status" class="status-message"></div>
                 <form id="create-note-form">
@@ -90,7 +90,7 @@
             <!-- Vista para editar nota existente -->
             <div id="edit-form">
                 <div class="form-header">
-                    <h2 class="text-2xl font-bold text-gray-600 mb-3">Editar Nota</h2>
+                    <h2 class="text-2xl font-bold text-gray-600 mb-3 dark:text-slate-300">Editar Nota</h2>
                 </div>
                 
                 <div id="edit-status" class="status-message"></div>

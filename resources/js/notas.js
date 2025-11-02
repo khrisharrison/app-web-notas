@@ -37,40 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
     editNoteForm.addEventListener('submit', updateNote);
     
     searchInput.addEventListener('input', filterNotes);
-    // Dark mode: Inicializar toggle si existe
-    const darkToggle = document.getElementById('dark-mode-toggle');
-    const darkIcon = document.getElementById('dark-mode-icon');
-    if (darkToggle && darkIcon) {
-        const applyDark = () => {
-            const enabled = localStorage.getItem('dark-mode') === 'true';
-            if (enabled) {
-                document.documentElement.classList.add('dark');
-                darkToggle.setAttribute('aria-pressed', 'true');
-                // cambiar icono a sol (para indicar 'salir modo oscuro')
-                darkIcon.textContent = 'light_mode';
-            } else {
-                document.documentElement.classList.remove('dark');
-                darkToggle.setAttribute('aria-pressed', 'false');
-                // mostrar icono de luna
-                darkIcon.textContent = 'dark_mode';
-            }
-        };
-
-        // Toggle on click
-        darkToggle.addEventListener('click', () => {
-            const currently = localStorage.getItem('dark-mode') === 'true';
-            localStorage.setItem('dark-mode', (!currently).toString());
-            applyDark();
-        });
-
-        // Apply initial state: if not set, respect system preference
-        if (localStorage.getItem('dark-mode') === null) {
-            const prefers = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            localStorage.setItem('dark-mode', prefers ? 'true' : 'false');
-        }
-
-        applyDark();
-    }
 });
 
     const ROUTE = 'notas/api';

@@ -12,7 +12,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-700 hover:text-teal-600 font-semibold">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-700 hover:text-teal-600 font-semibold dark:text-slate-200 dark:hover:text-teal-400">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
@@ -22,11 +22,12 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Dark mode toggle -->
                 <button id="dark-mode-toggle" aria-pressed="false" title="Alternar modo oscuro" class="inline-flex items-center px-3 py-2 me-3 border border-teal-200 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-teal-600 focus:outline-none transition ease-in-out duration-150 shadow-sm dark:bg-slate-800 dark:text-slate-200 dark:border-transparent">
+                    <span id="dark-mode-label" class="sr-only">Cambiar a modo oscuro</span>
                     <span id="dark-mode-icon" class="material-icons">dark_mode</span>
                 </button>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-teal-200 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-teal-600 focus:outline-none transition ease-in-out duration-150 shadow-sm dark:bg-slate-800 dark:text-slate-200 dark:border-transparent">
+                        <button class="inline-flex items-center px-3 py-2 border border-teal-200 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:text-teal-600 focus:outline-none transition ease-in-out duration-150 shadow-sm dark:bg-slate-800 dark:text-slate-200 dark:border-transparent dark:hover:text-teal-400">
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4 text-teal-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -37,7 +38,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')" class="text-gray-700 hover:text-teal-600">
+                        <x-dropdown-link :href="route('profile.edit')" class="text-gray-700 hover:text-teal-600 dark:text-slate-200 dark:hover:text-teal-400">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
@@ -45,8 +46,8 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
-                                    class="text-gray-700 hover:text-teal-600"
+                <x-dropdown-link :href="route('logout')"
+                    class="text-gray-700 hover:text-teal-600 dark:text-slate-200 dark:hover:text-teal-400"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
@@ -71,20 +72,20 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-teal-200 dark:bg-slate-800 dark:border-transparent">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-700 hover:text-teal-600 font-semibold">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-700 hover:text-teal-600 font-semibold dark:text-slate-200 dark:hover:text-teal-400">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
+    <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-700">
             <div class="px-4">
                 <div class="font-medium text-base text-teal-700 dark:text-teal-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')" class="text-gray-700 hover:text-teal-600">
+                <x-responsive-nav-link :href="route('profile.edit')" class="text-gray-700 hover:text-teal-600 dark:text-slate-200 dark:hover:text-teal-400">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
@@ -92,8 +93,8 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('logout')"
-                            class="text-gray-700 hover:text-teal-600"
+            <x-responsive-nav-link :href="route('logout')"
+                class="text-gray-700 hover:text-teal-600 dark:text-slate-200 dark:hover:text-teal-400"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         {{ __('Log Out') }}
